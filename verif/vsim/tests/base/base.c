@@ -19,6 +19,9 @@
 // This include is relative to $CARAVEL_PATH (see Makefile)
 #include <defs.h>
 #include <stub.c>
+#define REG_UP_BASE (*(volatile uint32_t*)0x30000000)
+#define REG_AA_BASE (*(volatile uint32_t*)0x30002000)
+#define REG_IS_BASE (*(volatile uint32_t*)0x30003000)
 
 // --------------------------------------------------------
 
@@ -84,6 +87,7 @@ void main()
         reg_mprj_io_10 = GPIO_MODE_USER_STD_OUTPUT;
         reg_mprj_io_9  = GPIO_MODE_USER_STD_OUTPUT;
         reg_mprj_io_8  = GPIO_MODE_USER_STD_OUTPUT;
+/*        
         reg_mprj_io_7  = GPIO_MODE_USER_STD_OUTPUT;
         reg_mprj_io_5  = GPIO_MODE_USER_STD_OUTPUT;
         reg_mprj_io_4  = GPIO_MODE_USER_STD_OUTPUT;
@@ -93,6 +97,7 @@ void main()
         reg_mprj_io_0  = GPIO_MODE_USER_STD_OUTPUT;
 
         reg_mprj_io_6  = GPIO_MODE_MGMT_STD_OUTPUT;
+*/
 
 	// Set UART clock to 64 kbaud (enable before I/O configuration)
 	// reg_uart_clkdiv = 625;
@@ -101,6 +106,12 @@ void main()
 	// Now, apply the configuration
 	reg_mprj_xfer = 1;
 	while (reg_mprj_xfer == 1);
+
+    REG_IS_BASE = 1;
+    //print("Monitor: set REG_IS_BASE = 1\n\n");	// Makes simulation very long!
+    REG_IS_BASE = 3;    
+    //print("Monitor: set REG_IS_BASE = 3\n\n");	// Makes simulation very long!
+
 
         // Configure LA probes [31: 0], [127:64] as inputs to the cpu 
 	// Configure LA probes [63:32] as outputs from the cpu

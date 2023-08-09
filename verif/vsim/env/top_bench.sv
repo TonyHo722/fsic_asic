@@ -121,7 +121,7 @@ module top_bench;
   //$dumpfile("top_bench.vcd");
   //$dumpvars(0, top_bench);
 
-    repeat (250) begin
+    repeat (50) begin
       repeat (1000) @(posedge clock);
     //$display("+1000 cycles");
     end
