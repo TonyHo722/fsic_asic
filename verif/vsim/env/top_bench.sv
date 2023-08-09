@@ -233,7 +233,8 @@ module top_bench;
   end
 
   always @(checkbits) begin
-    #1 $display("GPIO state = %b ", checkbits);
+    //#1 $display("GPIO state = %b ", checkbits);
+    #1 $display("%t IOCLK = %b, TX_CLK=%b, TXD=%b, RX_CLK=%b, RXD=%b,  ", $time, mprj_io[37], mprj_io[33], mprj_io[32:21], mprj_io[20], mprj_io[19:8]);
   end
 
   wire VDD3V3;
