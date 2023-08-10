@@ -62,11 +62,11 @@ module top_bench;
   wire        SDO;
 
 
-  wire [15:0] checkbits;
-  assign      checkbits = mprj_io[31:16];
+  wire [11:0] checkbits;
+  assign      checkbits = uut.mprj_io_out[32:21];
 
-  wire  [7:0] spivalue;
-  assign      spivalue  = mprj_io[15: 8];
+  //wire  [7:0] spivalue;
+  //assign      spivalue  = mprj_io[15: 8];
 
   reg         power1;  // 3.3V
   reg         power2;  // 1.8V
@@ -111,15 +111,18 @@ module top_bench;
   // TBD
   assign #2 rx_dat = 12'h000;
 
-  assign mprj_io[   37] = io_clk;
-  assign mprj_io[19: 8] = rx_dat;
-  assign mprj_io[   20] = rx_clk;
- 
+   initial begin
+    force uut.mprj_io_in[   37] = io_clk;
+    force uut.mprj_io_in[19: 8] = rx_dat;
+    force uut.mprj_io_in[   20] = rx_clk;
+  end
+
 
   initial begin
     $timeformat (-9, 3, " ns", 13);
   //$dumpfile("top_bench.vcd");
   //$dumpvars(0, top_bench);
+
 
     repeat (50) begin
       repeat (1000) @(posedge clock);
@@ -234,7 +237,7 @@ module top_bench;
 
   always @(checkbits) begin
     //#1 $display("GPIO state = %b ", checkbits);
-    #1 $display("%t IOCLK = %b, TX_CLK=%b, TXD=%b, RX_CLK=%b, RXD=%b,  ", $time, mprj_io[37], mprj_io[33], mprj_io[32:21], mprj_io[20], mprj_io[19:8]);
+    #1 $display("%t IOCLK = %b, TX_CLK=%b, TXD=%b, RX_CLK=%b, RXD=%b,  ", $time, uut.mprj_io_in[37], uut.mprj_io_out[33], uut.mprj_io_out[32:21], uut.mprj_io_in[20], uut.mprj_io_in[19:8]);
   end
 
   wire VDD3V3;
@@ -298,6 +301,7 @@ module top_bench;
 
   wire   uart_tx;
   assign uart_tx = mprj_io[6];
+
 
   tbuart tbuart (.ser_rx(uart_tx));  // I
 
