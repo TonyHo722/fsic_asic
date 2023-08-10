@@ -54,7 +54,8 @@ module top_bench;
   `include "bench_ini.svh"
 
   wire        gpio;
-  wire [37:0] mprj_io;
+  wire [37:0] mprj_i;
+  wire [37:0] mprj_o;
   wire        flash_csb;
   wire        flash_clk;
   wire        flash_io0;
@@ -62,11 +63,11 @@ module top_bench;
   wire        SDO;
 
 
-  wire [15:0] checkbits;
-  assign      checkbits = mprj_io[31:16];
+  wire [11:0] checkbits;
+  assign      checkbits = mprj_o[32:21];
 
-  wire  [7:0] spivalue;
-  assign      spivalue  = mprj_io[15: 8];
+//  wire  [7:0] spivalue;
+//  assign      spivalue  = mprj_io[15: 8];
 
   reg         power1;  // 3.3V
   reg         power2;  // 1.8V
@@ -111,9 +112,9 @@ module top_bench;
   // TBD
   assign #2 rx_dat = 12'h000;
 
-  assign mprj_io[   37] = io_clk;
-  assign mprj_io[19: 8] = rx_dat;
-  assign mprj_io[   20] = rx_clk;
+  assign mprj_i[   37] = io_clk;
+  assign mprj_i[19: 8] = rx_dat;
+  assign mprj_i[   20] = rx_clk;
  
 
   initial begin
@@ -232,9 +233,10 @@ module top_bench;
     power2 <= 1'b1;
   end
 
+
   always @(checkbits) begin
     //#1 $display("GPIO state = %b ", checkbits);
-    #1 $display("%t IOCLK = %b, TX_CLK=%b, TXD=%b, RX_CLK=%b, RXD=%b,  ", $time, mprj_io[37], mprj_io[33], mprj_io[32:21], mprj_io[20], mprj_io[19:8]);
+    #1 $display("%t IOCLK = %b, TX_CLK=%b, TXD=%b, RX_CLK=%b, RXD=%b,  ", $time, mprj_i[37], mprj_o[33], mprj_o[32:21], mprj_i[20], mprj_i[19:8]);
   end
 
   wire VDD3V3;
@@ -259,8 +261,9 @@ module top_bench;
 
 
   // move to bench_vec.svh
-  // assign mprj_io[3] = 1'b1;  // Force CSB high.
-
+    assign mprj_i[3] = 1;  // Force CSB high.
+    assign mprj_i[0] = 0;  // Disable Debug Mode
+    
   caravel uut (.vddio     (VDD3V3),
                .vddio_2   (VDD3V3),
                .vssio     (VSS),
@@ -281,7 +284,9 @@ module top_bench;
                .vssd2     (VSS),
                .clock     (clock),
                .gpio      (gpio),
-               .mprj_io   (mprj_io),
+               //tony_debug .mprj_io   (mprj_io),
+               .mprj_i   (mprj_i),	//tony_debug
+               .mprj_o   (mprj_o),	//tony_debug
                .flash_csb (flash_csb),
                .flash_clk (flash_clk),
                .flash_io0 (flash_io0),
@@ -297,12 +302,12 @@ module top_bench;
                                               .io3() );        // not used
 
   wire   uart_tx;
-  assign uart_tx = mprj_io[6];
+  assign uart_tx = mprj_o[6];
 
   tbuart tbuart (.ser_rx(uart_tx));  // I
 
   // -------------------------------------------------------
-  `include "bench_vec.svh"
+  //`include "bench_vec.svh"
 
   // -------------------------------------------------------
   `ifdef    CPU_TRACE

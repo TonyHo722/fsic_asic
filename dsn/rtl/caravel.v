@@ -56,7 +56,18 @@ module caravel (
     inout vssd2,	// User area 2 digital ground
 
     inout gpio,		// Used for external LDO control
-    inout [`MPRJ_IO_PADS-1:0] mprj_io,
+
+    /* for simulation, the input signal is come from testbench to caravel
+      - using mprj_i to replace mprj_io
+      - using mprj_o as output to testbench
+    */
+    
+    //Willy debug - s
+    //inout [`MPRJ_IO_PADS-1:0] mprj_io,
+    input [`MPRJ_IO_PADS-1:0] mprj_i,
+    output [`MPRJ_IO_PADS-1:0] mprj_o,
+    //Willy debug - e
+    
     input clock,    	// CMOS core clock input, not a crystal
     input resetb,	// Reset input (sense inverted)
 
@@ -121,6 +132,7 @@ module caravel (
      *--------------------------------------------------------------------
      */
 
+
     // One-bit GPIO dedicated to management SoC (outside of user control)
     wire gpio_out_core;
     wire gpio_in_core;
@@ -143,6 +155,16 @@ module caravel (
     wire [`MPRJ_IO_PADS-1:0] mprj_io_in;
     wire [`MPRJ_IO_PADS-1:0] mprj_io_out;
     wire [`MPRJ_IO_PADS-1:0] mprj_io_one;
+
+//Willy debug - s
+    wire [`MPRJ_IO_PADS-1:0] mprj_io;
+    assign mprj_io[3] = mprj_i[3];
+    assign mprj_io[0] = mprj_i[0];
+    assign mprj_o = mprj_io_out;
+    //assign mprj_en = mprj_io_oeb;
+    assign mprj_io_in = mprj_i;
+//Willy debug - e
+
 
     // User Project Control (user-facing)
     wire [`MPRJ_IO_PADS-1:0] user_io_oeb;
@@ -390,7 +412,8 @@ module caravel (
 	.flash_io0_di_core(flash_io0_di),
 	.flash_io1_di_core(flash_io1_di),
 	.mprj_io_one(mprj_io_one),
-	.mprj_io_in(mprj_io_in),
+	///Willy debug .mprj_io_in(mprj_io_in),
+  /* for simulation, the input signal is come from testbench to caravel, remove the PAD input */
 	.mprj_io_out(mprj_io_out),
 	.mprj_io_oeb(mprj_io_oeb),
 	.mprj_io_inp_dis(mprj_io_inp_dis),
@@ -1633,3 +1656,4 @@ module caravel (
 
 endmodule
 // `default_nettype wire
+

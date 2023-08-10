@@ -88,4 +88,4 @@
 // ../../../fork/caravel/verilog/rtl/caravel_core.v
 // ../src/caravel_core.v
 // ../../../fork/caravel/verilog/rtl/caravel.v
-   ../../caravel_user_project/caravel/verilog/rtl/caravel.v
+//tony_debug use caravel.v in local  ../../caravel_user_project/caravel/verilog/rtl/caravel.v
