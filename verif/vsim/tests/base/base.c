@@ -123,6 +123,11 @@ void main()
     //print("Monitor: set REG_IS_BASE = 1\n\n");	// Makes simulation very long!
     REG_IS_BASE = 3;    
     //print("Monitor: set REG_IS_BASE = 3\n\n");	// Makes simulation very long!
+    
+    for (int i=0; i<100; i++) {
+      REG_AA_BASE = i;
+    }
+    //print("Monitor: set MialBox write\n\n");	// Makes simulation very long!
 
 
         // Configure LA probes [31: 0], [127:64] as inputs to the cpu 
