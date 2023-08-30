@@ -1,0 +1,33 @@
+#!/bin/bash
+# for change waveform filename in open_wave.tcl
+# - use open_wave script to open the filename
+# Example: 
+# step 1. rename .wdb and .wcfg file
+# $ mmv caravel_asic.\* 0830check.\#1
+# step 2. run chwave
+# $ ./chwave 0830check
+# step 3. run open_wave
+# $ ./open_wave
+
+if [ $# -lt 1 ]; then
+  echo "No wavefrom name!"
+  echo "Example:"
+  echo "  chwave new_waveform"
+  exit 1
+fi
+
+if [ ! -f $1.wdb ]; then
+  echo "[Warnning] : $1.wdb not exist"
+fi  
+
+if [ ! -f $1.wcfg ]; then
+  echo "[Warnning] : $1.wcfg not exist"
+fi  
+
+#sed -i -e "s/caravel_asic/$1/i" open_wave.tcl
+cat open_wave.tcl | perl -pe "s/open_wave_database \w+/open_wave_database $1/" > open_wave.tcl.tmp
+cp -f open_wave.tcl.tmp open_wave.tcl
+rm open_wave.tcl.tmp
+
+echo -e "after modify open_wave.tcl the content as below\n----"
+cat open_wave.tcl
