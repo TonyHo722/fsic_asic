@@ -1,0 +1,5 @@
+#!/bin/bash
+rm -rf caravel
+mkdir caravel
+echo "copy files base on list in rtl.f"
+../../../src/gen_rtl rtl.f ./caravel
